@@ -1,0 +1,3 @@
+-- 'I' for information messages
+-- 'W' for warnings, and
+-- 'E' for errors
