@@ -29,4 +29,18 @@ insert (Unknown _) t = t
 insert m Leaf = Node Leaf m Leaf
 insert m@(LogMessage _ tsp _) (Node l lm@(LogMessage _ tsp' _) r) =
   if tsp < tsp' then Node (insert m l) lm r else Node l lm (insert m r)
-insert _ _ = error "insert: unexpected pattern match"
+insert _ (Node _ (Unknown _) _) = error "The tree contains an Unknown message"
+
+build :: [LogMessage] -> MessageTree
+build = foldr insert Leaf
+
+inOrder :: MessageTree -> [LogMessage]
+inOrder Leaf = []
+inOrder (Node l m r) = inOrder l ++ [m] ++ inOrder r
+
+isSevere :: LogMessage -> Bool
+isSevere (LogMessage (Error sev) _ _) = sev >= 50
+isSevere _ = False
+
+whatWentWrong :: [LogMessage] -> [String]
+whatWentWrong = map (\(LogMessage _ _ s) -> s) . filter isSevere . inOrder . build
