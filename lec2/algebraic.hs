@@ -1,6 +1,3 @@
-import Control.Applicative.Lift (failure)
-import Data.Sequence (Seq (Empty))
-
 data Thing
   = Shoe
   | Ship
